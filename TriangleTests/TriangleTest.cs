@@ -112,7 +112,7 @@ namespace TriangleTests
         [InlineData(3, 3, 6, 3, 3, 5.99998)]
         public void AreCongruent_WithAlmostEqualSides_ReturnsTrue(double side1, double side2, double side3, double side4, double side5, double side6)
         {
-            controller.AreCongruent(new Triangle(side1, side2, side3), new Triangle(side4, side5, side6)).Should().BeTrue();
+            controller.AreCongruent(new Triangle(side1, side2, side3), new Triangle(side4, side5, side6)).Should().Be(true);
         }
 
         [Theory]
@@ -120,7 +120,7 @@ namespace TriangleTests
         [InlineData(3, 3, 6, 3, 3, 5.99993)]
         public void AreCongruent_WithNotEqualSides_ReturnsFalse(double side1, double side2, double side3, double side4, double side5, double side6)
         {
-            controller.AreCongruent(new Triangle(side1, side2, side3), new Triangle(side4, side5, side6)).Should().BeFalse();
+            controller.AreCongruent(new Triangle(side1, side2, side3), new Triangle(side4, side5, side6)).Should().Be(false);
         }
 
         [Theory]
@@ -129,7 +129,7 @@ namespace TriangleTests
         [InlineData(3, 3, 6, 4, 4, 7.99998)]
         public void AreSimilar_WithAlmostProportionalSides_ReturnsTrue(double side1, double side2, double side3, double side4, double side5, double side6)
         {
-            controller.AreSimilar(new Triangle(side1, side2, side3), new Triangle(side4, side5, side6)).Should().BeTrue();
+            controller.AreSimilar(new Triangle(side1, side2, side3), new Triangle(side4, side5, side6)).Should().Be(true);
         }
 
         [Theory]
@@ -138,7 +138,7 @@ namespace TriangleTests
         [InlineData(3, 3, 6, 4, 4, 7.996)]
         public void AreSimilar_WithAlmostProportionalSides_ReturnsFalse(double side1, double side2, double side3, double side4, double side5, double side6)
         {
-            controller.AreSimilar(new Triangle(side1, side2, side3), new Triangle(side4, side5, side6)).Should().BeFalse();
+            controller.AreSimilar(new Triangle(side1, side2, side3), new Triangle(side4, side5, side6)).Should().Be(false);
         }
 
         [Fact]
