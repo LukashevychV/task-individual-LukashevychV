@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System;
 
+
 namespace Triangles.Models
 {
     public class Triangle
@@ -11,39 +12,41 @@ namespace Triangles.Models
 
         public Triangle(double side1, double side2, double side3)
         {
-            this.side1 = side1;
-            this.side2 = side2;
-            this.side3 = side3;
-            
+            this.side1 = Math.Round(side1,4);
+            this.side2 = Math.Round(side2, 4);
+            this.side3 = Math.Round(side3, 4);
+
         }
 
-        public double Side1 
+        public double Side1
         {
-            get { return side1; } 
-            set { side1 = value; }
+            get { return side1; }
+            set { side1 = Math.Round(value, 4); }
         }
         public double Side2
         {
             get { return side2; }
-            set { side2 = value; }
+            set { side2 = Math.Round(value, 4); }
         }
         public double Side3
         {
             get { return side3; }
-            set { side3 = value; }
+            set { side3 = Math.Round(value, 4); }
         }
 
         public double Area()
         {
-            var s = Perimeter() / 2;
-            return Math.Sqrt(s * (s - Side1) * (s - Side2) * (s - Side3));
+            double s = Perimeter() / 2;
+            double resultArea = Math.Sqrt(s * (s - side1) * (s - side2) * (s - side3));
+
+            return resultArea;
         }
 
-        public double Perimeter() => Side1 + Side2 + Side3;
+        public double Perimeter() => side1 + side2 + side3;
 
         public double[] GetOrderedSides()
         {
-            double[] sides = { Side1, Side2, Side3 };
+            double[] sides = { side1, side2, side3 };
             Array.Sort(sides);
             return sides;
         }
@@ -61,7 +64,7 @@ namespace Triangles.Models
 
         public bool IsValid()
         {
-            return Side1 < (Side2 + Side3) && Side2 < (Side1 + Side3) && Side3 < (Side1 + Side2);
+            return Side1 < (side2 + side3) && side2 < (side1 + side3) && side3 < (side1 + side2);
         }
 
         public bool IsRightAngled()
@@ -73,18 +76,19 @@ namespace Triangles.Models
 
         public bool IsEquilateral()
         {
-            return Side1 == Side2 && Side2 == Side3;
+            return side1 == side2 && side2 == side3;
         }
 
         public bool IsIsosceles()
         {
-            return Side1 == Side2 || Side1 == Side3 || Side2 == Side3;
+            return side1 == side2 || side1 == side3 || side2 == side3;
         }
 
         public bool AreCongruent(Triangle other)
         {
             double[] sides = GetOrderedSides();
             double[] otherSides = other.GetOrderedSides();
+
             return sides.SequenceEqual(otherSides);
         }
 

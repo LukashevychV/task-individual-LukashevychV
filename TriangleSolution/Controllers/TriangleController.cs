@@ -4,52 +4,62 @@ using System;
 using Triangles.Models;
 using System.Linq;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Triangles.Controllers
 {
     [Route("triangle")]
     public class TriangleController : Controller
     {
+
+
+
         [HttpGet("Info")]
-        public IActionResult Info([FromQuery] Triangle triangle)
+        public string Info([FromQuery] Triangle triangle)
         {
             if (triangle == null || !triangle.IsValid())
             {
-                return BadRequest("Invalid triangle dimensions.");
+                return "Invalid triangle dimensions.";
             }
 
             var sides = new[] { triangle.Side1, triangle.Side2, triangle.Side3 }.OrderBy(s => s).ToArray();
-            var perimeter = triangle.Perimeter();
-            var area = triangle.Area();
+            double perimeter = triangle.Perimeter();
+            double area = triangle.Area();
             var reducedSides = sides.Select(side => Math.Round(side / perimeter, 2)).ToArray();
 
-            string info = $"Triangle:\n({sides[0]}, {sides[1]}, {sides[2]})\nReduced:\n({reducedSides[0]}, {reducedSides[1]}, {reducedSides[2]})\n\nArea = {Math.Round(area, 2)}\nPerimeter = {Math.Round(perimeter, 2)}";
+            string info = $@"Triangle:
+({sides[0]}, {sides[1]}, {sides[2]})
+Reduced:
+({reducedSides[0]}, {reducedSides[1]}, {reducedSides[2]})
 
-            return Content(info);
+Area = {Math.Round(area, 2):F2}
+Perimeter = {Math.Round(perimeter, 2)}";
+
+            return info;
         }
 
         [HttpGet("IsRightAngled")]
-        public IActionResult IsRightAngled([FromQuery] Triangle triangle)
+        public bool IsRightAngled([FromQuery] Triangle triangle)
         {
             if (!triangle.IsValid())
             {
-                return BadRequest("Invalid triangle dimensions.");
+                return false;
             }
 
             var isRightAngled = triangle.IsRightAngled();
-            return Ok(isRightAngled);
+            return isRightAngled;
         }
 
         [HttpGet("Perimeter")]
-        public IActionResult Perimeter([FromQuery] Triangle triangle)
+        public string Perimeter([FromQuery] Triangle triangle)
         {
             if (!triangle.IsValid())
             {
-                return BadRequest("Invalid triangle dimensions.");
+                return ("Invalid triangle dimensions.");
             }
 
             var perimeter = triangle.Perimeter();
-            return Ok($"{perimeter}");
+            return ($"{perimeter}");
         }
 
         [HttpGet("Area")]
@@ -61,65 +71,65 @@ namespace Triangles.Controllers
             }
 
             var area = triangle.Area();
-            return ($"{area:F2}");
+            return (area.ToString("F4"));
         }
 
         [HttpGet("IsEquilateral")]
-        public IActionResult IsEquilateral([FromQuery] Triangle triangle)
+        public bool IsEquilateral([FromQuery] Triangle triangle)
         {
             if (!triangle.IsValid())
             {
-                return BadRequest("Invalid triangle dimensions.");
+                return false;
             }
 
             var isEquilateral = triangle.IsEquilateral();
-            return Ok(isEquilateral);
+            return isEquilateral;
         }
 
         [HttpGet("IsIsosceles")]
-        public IActionResult IsIsosceles([FromQuery] Triangle triangle)
+        public bool IsIsosceles([FromQuery] Triangle triangle)
         {
             if (!triangle.IsValid())
             {
-                return BadRequest("Invalid triangle dimensions.");
+                return false;
             }
 
             var isIsosceles = triangle.IsIsosceles();
-            return Ok(isIsosceles);
+            return isIsosceles;
         }
 
         [HttpGet("AreCongruent")]
-        public IActionResult AreCongruent([FromQuery] Triangle tr1, [FromQuery] Triangle tr2)
+        public bool AreCongruent([FromQuery] Triangle tr1, [FromQuery] Triangle tr2)
         {
             if (!tr1.IsValid() || !tr2.IsValid())
             {
-                return BadRequest("Invalid triangle dimensions.");
+                return false;
             }
 
             bool areCongruent = tr1.AreCongruent(tr2);
-            return Ok(areCongruent);
+            return areCongruent;
         }
 
         [HttpGet("AreSimilar")]
-        public IActionResult AreSimilar([FromQuery] Triangle tr1, [FromQuery] Triangle tr2)
+        public bool AreSimilar([FromQuery] Triangle tr1, [FromQuery] Triangle tr2)
         {
             if (!tr1.IsValid() || !tr2.IsValid())
             {
-                return BadRequest("Invalid triangle dimensions.");
+                return false;
             }
 
             var areSimilar = tr1.AreSimilar(tr2);
-            return Ok(areSimilar);
+            return areSimilar;
         }
 
         [HttpGet("InfoGreatestPerimeter")]
-        public IActionResult InfoGreatestPerimeter([FromQuery] Triangle[] tr)
+        public string InfoGreatestPerimeter([FromQuery] Triangle[] tr)
         {
 
             foreach (var item in tr)
             {
                 if (!item.IsValid())
-                    return BadRequest("Invalid triangle dimensions.");
+                    return "Invalid triangle dimensions.";
             }
 
             Triangle triangleWithGreatestPerimeter = null;
@@ -128,7 +138,7 @@ namespace Triangles.Controllers
             {
                 if (!triangle.IsValid())
                 {
-                    return BadRequest("Invalid triangle dimensions.");
+                    return "Invalid triangle dimensions.";
                 }
                 double currentPerimeter = triangle.Perimeter();
                 if (currentPerimeter > maxPerimeter)
@@ -139,7 +149,7 @@ namespace Triangles.Controllers
             }
             if (triangleWithGreatestPerimeter == null)
             {
-                return BadRequest("Could not find a valid triangle with the greatest perimeter.");
+                return "Could not find a valid triangle with the greatest perimeter.";
             }
 
             var sides = triangleWithGreatestPerimeter.GetOrderedSides();
@@ -148,16 +158,16 @@ namespace Triangles.Controllers
 
             string info = $"Triangle:\n({sides[0]}, {sides[1]}, {sides[2]})\nReduced:\n({reducedSides[0]:F2}, {reducedSides[1]:F2}, {reducedSides[2]:F2})\n\nArea = {area:F2}\nPerimeter = {maxPerimeter:F2}";
 
-            return Content(info);
+            return info;
 
         }
 
         [HttpGet("InfoGreatestArea")]
-        public IActionResult InfoGreatestArea([FromQuery] Triangle[] tr)
+        public string InfoGreatestArea([FromQuery] Triangle[] tr)
         {
             if (tr == null || tr.Length == 0)
             {
-                return BadRequest("No triangles provided.");
+                return "No triangles provided.";
             }
 
             Triangle triangleWithGreatestArea = null;
@@ -166,7 +176,7 @@ namespace Triangles.Controllers
             {
                 if (!triangle.IsValid())
                 {
-                    return BadRequest("Invalid triangle dimensions.");
+                    return "Invalid triangle dimensions.";
                 }
                 double currentArea = triangle.Area();
                 if (currentArea > maxArea)
@@ -178,7 +188,7 @@ namespace Triangles.Controllers
 
             if (triangleWithGreatestArea == null)
             {
-                return BadRequest("Could not find a valid triangle with the greatest area.");
+                return "Could not find a valid triangle with the greatest area.";
             }
 
             var sides = triangleWithGreatestArea.GetOrderedSides();
@@ -187,22 +197,22 @@ namespace Triangles.Controllers
 
             string info = $"Triangle:\n({sides[0]}, {sides[1]}, {sides[2]})\nReduced:\n({reducedSides[0]:F2}, {reducedSides[1]:F2}, {reducedSides[2]:F2})\n\nArea = {maxArea:F2}\nPerimeter = {perimeter:F2}";
 
-            return Content(info);
+            return info;
         }
 
         [HttpGet("NumbersPairwiseNotSimilar")]
-        public IActionResult NumbersPairwiseNotSimilar([FromQuery] Triangle[] tr)
+        public string NumbersPairwiseNotSimilar([FromQuery] Triangle[] tr)
         {
             if (tr == null || tr.Length == 0)
             {
-                return BadRequest("No triangles provided.");
+                return "No triangles provided.";
             }
 
             for (int i = 0; i < tr.Length; i++)
             {
                 if (!tr[i].IsValid())
                 {
-                    return BadRequest($"Invalid dimensions for triangle at index {i}.");
+                    return $"Invalid dimensions for triangle at index {i}.";
                 }
             }
             var nonSimilarPairs = new List<string>();
@@ -219,7 +229,7 @@ namespace Triangles.Controllers
 
             string responseContent = string.Join(Environment.NewLine, nonSimilarPairs);
 
-            return Content(responseContent);
+            return responseContent;
         }
     }
 }
